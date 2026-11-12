@@ -1,0 +1,47 @@
+{
+  "name": "Dan Airport",
+  "comment": "Local metric frame: origin at RWY 09 threshold, x = east, y = north, units = meters.",
+  "nodes": {
+    "RWY09":  {"x": 0,    "y": 0,    "type": "runway"},
+    "RWY_X1": {"x": 1600, "y": 0,    "type": "runway"},
+    "RWY27":  {"x": 2400, "y": 0,    "type": "runway"},
+    "HP_A":   {"x": 0,    "y": -90,  "type": "holding"},
+    "TW_W":   {"x": 0,    "y": -180, "type": "taxiway"},
+    "TW_1":   {"x": 300,  "y": -180, "type": "taxiway"},
+    "TW_2":   {"x": 550,  "y": -180, "type": "taxiway"},
+    "TW_3":   {"x": 800,  "y": -180, "type": "taxiway"},
+    "TW_E":   {"x": 1600, "y": -180, "type": "taxiway"},
+    "G1":     {"x": 300,  "y": -320, "type": "gate"},
+    "G2":     {"x": 550,  "y": -320, "type": "gate"},
+    "G3":     {"x": 800,  "y": -320, "type": "gate"}
+  },
+  "edges": [
+    {"from": "RWY09",  "to": "RWY_X1", "kind": "runway"},
+    {"from": "RWY_X1", "to": "RWY27",  "kind": "runway"},
+    {"from": "TW_W",   "to": "HP_A",   "kind": "taxiway"},
+    {"from": "HP_A",   "to": "RWY09",  "kind": "taxiway"},
+    {"from": "TW_W",   "to": "TW_1",   "kind": "taxiway"},
+    {"from": "TW_1",   "to": "TW_2",   "kind": "taxiway"},
+    {"from": "TW_2",   "to": "TW_3",   "kind": "taxiway"},
+    {"from": "TW_3",   "to": "TW_E",   "kind": "taxiway"},
+    {"from": "TW_E",   "to": "RWY_X1", "kind": "taxiway"},
+    {"from": "G1",     "to": "TW_1",   "kind": "apron"},
+    {"from": "G2",     "to": "TW_2",   "kind": "apron"},
+    {"from": "G3",     "to": "TW_3",   "kind": "apron"}
+  ],
+  "runway": {
+    "id": "09/27",
+    "width_m": 45,
+    "threshold": "RWY09",
+    "end": "RWY27",
+    "holding_point": "HP_A",
+    "lineup_route": ["HP_A", "RWY09"],
+    "takeoff_route": ["RWY09", "RWY_X1", "RWY27"]
+  },
+  "departure_routes": {
+    "G1": ["G1", "TW_1", "TW_W", "HP_A"],
+    "G2": ["G2", "TW_2", "TW_1", "TW_W", "HP_A"],
+    "G3": ["G3", "TW_3", "TW_2", "TW_1", "TW_W", "HP_A"]
+  },
+  "exit_radius_m": 6000
+}

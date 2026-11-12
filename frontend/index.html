@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ATC simulation · ground</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="layout">
+    <section class="scope" aria-label="Ground radar">
+      <canvas id="scope"></canvas>
+      <div class="scope-overlay">
+        <span id="airport-name">Connecting…</span>
+        <span id="sim-clock">T+ 00:00</span>
+      </div>
+      <p class="scope-hint">Scroll to zoom, drag to pan, double-click to reset the view.</p>
+    </section>
+
+    <aside class="panel">
+      <header class="panel-head">
+        <h1>Tower</h1>
+        <p class="link" id="link"><span class="dot"></span><span id="link-text">Connecting</span></p>
+      </header>
+
+      <section class="runway-strip" id="runway-strip" aria-live="polite">
+        <span class="rwy-end" id="rwy-a">09</span>
+        <span class="rwy-status" id="rwy-status">Runway free</span>
+        <span class="rwy-end" id="rwy-b">27</span>
+      </section>
+
+      <section class="block">
+        <h2>Waiting at the holding point</h2>
+        <ol class="queue" id="queue"></ol>
+      </section>
+
+      <section class="block">
+        <h2>New departure</h2>
+        <div class="spawn">
+          <label class="field">
+            <span>Gate</span>
+            <select id="spawn-gate"><option value="">First free</option></select>
+          </label>
+          <label class="field">
+            <span>Callsign</span>
+            <input id="spawn-callsign" placeholder="Auto" maxlength="8" autocomplete="off" spellcheck="false">
+          </label>
+          <button id="spawn-btn" type="button">Spawn aircraft</button>
+        </div>
+        <p class="feedback" id="spawn-feedback" role="status"></p>
+      </section>
+
+      <section class="block">
+        <h2>Traffic</h2>
+        <table class="traffic">
+          <thead><tr><th>Callsign</th><th>Phase</th><th class="num">GS kt</th><th class="num">Alt ft</th></tr></thead>
+          <tbody id="traffic"></tbody>
+        </table>
+      </section>
+
+      <section class="block grow">
+        <h2>Frequency</h2>
+        <ul class="log" id="log"></ul>
+      </section>
+    </aside>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

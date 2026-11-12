@@ -1,0 +1,174 @@
+/* Palette taken from ground-radar consoles: blue-slate field, dark asphalt,
+   amber taxi guidance, red stop bars, cyan for runway occupancy. */
+:root {
+  --field: #1b2730;
+  --pavement: #34444f;
+  --asphalt: #0f161b;
+  --marking: #e6edf1;
+  --taxi-line: #d9b44a;
+  --stop-bar: #e5533f;
+  --panel: #131c22;
+  --panel-line: #24323b;
+  --text: #d5dee4;
+  --muted: #7f909b;
+
+  --st-parked: #8a9ba6;
+  --st-taxi: #f0c75e;
+  --st-hold: #ff8a5c;
+  --st-runway: #5fd0e6;
+  --st-air: #eef4f7;
+
+  --font-ui: "Barlow", "Segoe UI", system-ui, sans-serif;
+  --font-data: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  background: var(--field);
+  color: var(--text);
+  font: 15px/1.45 var(--font-ui);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  height: 100vh;
+}
+
+/* --- scope ------------------------------------------------------------- */
+.scope { position: relative; min-height: 0; }
+#scope { display: block; width: 100%; height: 100%; cursor: grab; touch-action: none; }
+#scope:active { cursor: grabbing; }
+.scope-hint {
+  position: absolute; left: 20px; bottom: 14px;
+  margin: 0; font-size: 13px; color: var(--muted);
+  pointer-events: none;
+}
+.scope-overlay {
+  position: absolute; left: 20px; top: 16px; right: 20px;
+  display: flex; justify-content: space-between;
+  font: 600 17px/1 var(--font-data);
+  letter-spacing: .02em;
+  color: var(--muted);
+  pointer-events: none;
+}
+#sim-clock { font-variant-numeric: tabular-nums; color: var(--text); }
+
+/* --- panel ------------------------------------------------------------- */
+.panel {
+  background: var(--panel);
+  border-left: 1px solid var(--panel-line);
+  display: flex; flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+.panel-head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  padding: 18px 20px 12px;
+}
+h1 { margin: 0; font: 700 26px/1 var(--font-data); letter-spacing: .01em; }
+h2 { margin: 0 0 8px; font: 600 15px/1.2 var(--font-ui); color: var(--muted); }
+
+.link { margin: 0; display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 14px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--st-hold); }
+.link.up .dot { background: #6fcf8e; }
+
+/* The runway strip is the one loud element: it mirrors the runway itself. */
+.runway-strip {
+  margin: 4px 20px 18px;
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center;
+  height: 58px;
+  background:
+    repeating-linear-gradient(90deg, var(--marking) 0 18px, transparent 18px 34px) center / 100% 2px no-repeat,
+    var(--asphalt);
+  border-top: 2px solid var(--marking);
+  border-bottom: 2px solid var(--marking);
+  padding: 0 14px;
+  transition: box-shadow .25s ease;
+}
+.rwy-end {
+  font: 700 24px/1 var(--font-data);
+  color: var(--marking);
+  background: var(--asphalt);
+  padding: 2px 6px;
+}
+.rwy-status {
+  justify-self: center;
+  padding: 3px 10px;
+  background: var(--asphalt);
+  font: 600 18px/1.2 var(--font-data);
+  letter-spacing: .02em;
+}
+.runway-strip.busy { box-shadow: inset 0 0 0 999px rgba(95, 208, 230, .14); }
+.runway-strip.busy .rwy-status { color: var(--st-runway); }
+
+.block { padding: 0 20px 18px; }
+.block.grow { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+
+.queue { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 6px; }
+.queue li {
+  font: 600 16px/1 var(--font-data);
+  padding: 6px 9px;
+  border: 1px solid var(--st-hold);
+  color: var(--st-hold);
+}
+.queue li.empty { border: 0; padding: 0; color: var(--muted); font: 14px/1.4 var(--font-ui); }
+
+.spawn { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.field { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--muted); }
+select, input { width: 100%; min-width: 0; }
+select, input, button {
+  font: 500 15px/1.2 var(--font-ui);
+  color: var(--text);
+  background: var(--asphalt);
+  border: 1px solid var(--panel-line);
+  padding: 8px 10px;
+  border-radius: 3px;
+}
+input { text-transform: uppercase; }
+input::placeholder { text-transform: none; color: var(--muted); }
+button {
+  grid-column: 1 / -1;
+  background: var(--taxi-line);
+  border-color: var(--taxi-line);
+  color: #1d1a10;
+  font-weight: 600;
+  cursor: pointer;
+}
+button:hover { filter: brightness(1.08); }
+button:disabled { opacity: .5; cursor: default; }
+:focus-visible { outline: 2px solid var(--st-runway); outline-offset: 2px; }
+
+.feedback { min-height: 1.4em; margin: 8px 0 0; font-size: 14px; color: var(--muted); }
+.feedback.error { color: var(--stop-bar); }
+
+.traffic { width: 100%; border-collapse: collapse; font: 500 16px/1.3 var(--font-data); }
+.traffic th { text-align: left; font: 500 13px/1.3 var(--font-ui); color: var(--muted); padding: 0 0 4px; }
+.traffic td { padding: 3px 0; border-top: 1px solid var(--panel-line); }
+.traffic .num { text-align: right; font-variant-numeric: tabular-nums; }
+.traffic .cs { font-weight: 700; }
+.traffic tr.empty td { color: var(--muted); font: 14px/1.4 var(--font-ui); border: 0; padding-top: 4px; }
+
+.log {
+  margin: 0; padding: 0; list-style: none;
+  overflow-y: auto; min-height: 0; flex: 1;
+  font-size: 14px;
+}
+.log li { display: grid; grid-template-columns: 48px 62px 1fr; gap: 6px; padding: 3px 0; }
+.log time { color: var(--muted); font: 500 15px/1.35 var(--font-data); font-variant-numeric: tabular-nums; }
+.log .cs { font: 700 15px/1.35 var(--font-data); }
+.log li.state { color: var(--muted); }
+.log li.error { color: var(--stop-bar); }
+
+/* --- small screens: scope on top, panel below --------------------------- */
+@media (max-width: 860px) {
+  .layout { grid-template-columns: 1fr; grid-template-rows: 55vh auto; height: auto; }
+  .panel { border-left: 0; border-top: 1px solid var(--panel-line); overflow: visible; }
+  .log { max-height: 300px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
